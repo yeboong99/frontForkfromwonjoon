@@ -1,17 +1,31 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import axios from 'axios';
+import { useCallback } from 'react';
 
-const Login: React.FC = () => {
-  const link = 'https://toleave.shop/oauth2/authorization/naver';
+const Login = () => {
+  const loginHandler = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        'https://toleave.shop/oauth2/authorization/naver',
+        {
+          withCredentials: true,
+        }
+      );
 
-  const loginHandler = useCallback(() => {
-    window.location.href = link;
-  }, [link]);
+      // ✅ Response Headers 로그 출력
+      console.log('Response Headers:', response.headers);
+      console.log('Redirecting to:', response.request.responseURL);
+
+      window.location.href = response.request.responseURL;
+    } catch (error) {
+      console.error('로그인 오류:', error);
+    }
+  }, []);
 
   return (
     <button type="button" onClick={loginHandler}>
-      카카오톡으로 시작하기
+      네이버로 시작하기
     </button>
   );
 };
