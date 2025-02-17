@@ -3,7 +3,7 @@
 import React, { useCallback } from 'react';
 
 const Login: React.FC = () => {
-  const link = '링크 여기에 넣어서 쓰세요';
+  const link = 'https://toleave.shop/oauth2/authorization/naver';
 
   const loginHandler = useCallback(() => {
     window.location.href = link;
