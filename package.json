@@ -3,18 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
-    "lint": "eslint .",
-    "format": "prettier --write .",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint",
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -30,21 +21,9 @@
     "sass": "^1.83.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.6.1",
-    "@commitlint/config-conventional": "^19.6.0",
-    "@eslint/eslintrc": "^3",
     "@types/node": "^20.17.14",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19",
-    "@typescript-eslint/eslint-plugin": "^8.14.0",
-    "@typescript-eslint/parser": "^8.14.0",
-    "eslint": "^9",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react-perf": "^3.3.3",
-    "husky": "^9.1.7",
-    "lint-staged": "^10.5.4",
-    "prettier": "^3.4.2",
     "typescript": "^5"
   }
 }
