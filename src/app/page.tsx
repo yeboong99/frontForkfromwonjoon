@@ -1,54 +1,34 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 
 const Login = () => {
-  // 🔹 [1] 로그인 버튼을 클릭하면 네이버 OAuth 로그인 페이지로 이동
-  const loginHandler = useCallback(() => {
+  // 로그인 버튼 클릭 시 OAuth2 인증 URL로 이동
+  const loginHandler = () => {
     const authUrl = 'https://toleave.shop/oauth2/authorization/naver';
 
-    console.log('🔵 [로그인 요청] OAuth 네이버 로그인 페이지로 이동합니다...');
-    console.log('📌 이동할 URL:', authUrl);
+    console.log('🔵 [로그인 요청] 네이버 OAuth 페이지로 이동:', authUrl);
+    window.location.href = authUrl; // 네이버 OAuth 인증 페이지로 이동
+  };
 
-    window.location.href = authUrl; // OAuth 로그인 페이지로 이동
-  }, []);
-
-  // 🔹 [2] OAuth 로그인 후 리다이렉트된 경우 쿠키를 저장
+  // OAuth 인증 후 백엔드에서 받은 쿠키가 저장되었는지 확인
   useEffect(() => {
-    console.log('✅ OAuth 리다이렉트 감지됨');
+    console.log('🔍 [OAuth 완료 후] 쿠키 확인 시작...');
 
-    fetch('https://toleave.shop/user/me', {
-      credentials: 'include', // ✅ 쿠키 포함 요청
-    })
-      .then((res) => {
-        console.log('✅ 응답 헤더 확인:', res.headers);
-        const authHeader = res.headers.get('Authorization');
-        const refreshTokenHeader = res.headers.get('Refresh-Token');
+    const cookies = document.cookie;
+    console.log('🍪 [현재 저장된 쿠키]:', cookies);
 
-        if (authHeader) {
-          document.cookie = `Authorization=${authHeader}; Path=/; Secure; HttpOnly; SameSite=None`;
-          console.log('🍪 Authorization 쿠키 저장 완료!');
-        }
-
-        if (refreshTokenHeader) {
-          document.cookie = `Refresh-Token=${refreshTokenHeader}; Path=/; Secure; HttpOnly; SameSite=None`;
-          console.log('🍪 Refresh-Token 쿠키 저장 완료!');
-        }
-
-        console.log('✅ 모든 쿠키 저장 시도 완료');
-      })
-      .catch((error) => {
-        console.error('🚨 쿠키 저장 실패:', error);
-      });
+    if (cookies.includes('Authorization')) {
+      console.log('✅ [성공] Authorization 쿠키가 저장됨:', cookies);
+    } else {
+      console.warn('❌ [실패] Authorization 쿠키가 저장되지 않음.');
+    }
   }, []);
 
   return (
-    <div>
-      <h1>OAuth 로그인 테스트</h1>
-      <button type="button" onClick={loginHandler}>
-        네이버로 시작하기
-      </button>
-    </div>
+    <button type="button" onClick={loginHandler}>
+      네이버로 시작하기
+    </button>
   );
 };
 
