@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchWithAuth } from "@util/api"; // tsconfig.json의 paths 설정 적용
+import { fetchWithAuth } from "../../util/api"; // tsconfig.json의 paths 설정 적용
 
 interface UserData {
   email: string;
