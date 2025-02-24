@@ -1,6 +1,4 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   async rewrites() {
     return [];
   },
@@ -18,11 +16,12 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Access-Control-Allow-Headers",
-            value: "Authorization, Content-Type, Refresh-Token",
+            value:
+              "Authorization, Content-Type, Refresh-Token, User-Identifier",
           },
           {
             key: "Access-Control-Expose-Headers",
-            value: "Authorization, Refresh-Token",
+            value: "Authorization, Refresh-Token, User-Identifier",
           },
         ],
       },

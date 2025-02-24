@@ -1,47 +1,85 @@
-import style from '../../../styles/mypage/mypage.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import CustomCalendar from '../../../util/calendar/CustomCalendar';
+"use client";
 
-export default function myPage() {
-  return (
-    <>
-      {/* 상단 메뉴 */}
-      <div>
-        {/* 회원, 미니 캘린더 */}
-        <div>
-          {/* 회원 */}
-          <div className={style.userbox}>
-            {/* 프로필 사진 */}
-            <div>
-              <img className={style.profile} />
-            </div>
-            {/* 이름 */}
-            <div className={style.user}>
-              <p className={style.name}>린님</p>
-              <p className={style.email}>@rin1234</p>
-              <p className={style.account}>연동 소셜 계정</p>
-            </div>
-            {/* 회원 정보 수정 및 소셜 계정 */}
-            <div className={style.oauthbox}>
-              <button>회원 정보 수정</button>
-              <div className={style.oauth}>
-                <FontAwesomeIcon icon={faPlus} />
-              </div>
-            </div>
-          </div>
-          {/* 캘린더 */}
-          <div>
-            <CustomCalendar />
-          </div>
-        </div>
+import { useEffect, useState } from "react";
+import { fetchWithAuth } from "@/util/api";
 
-        {/* 여행 계획 */}
-        <div></div>
-      </div>
-
-      {/* 프로모션 배너 */}
-      <div></div>
-    </>
-  );
+interface UserData {
+  email: string;
+  name: string;
+  role: string;
+  policyAgreed: boolean;
+  subscribed: boolean;
 }
+
+const MyPage = () => {
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const refreshToken = localStorage.getItem("refreshToken");
+    const userIdentifier = localStorage.getItem("userIdentifier"); // 유저 식별자 추가
+
+    if (!refreshToken || !userIdentifier) {
+      setError("로그인 정보가 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
+    fetchWithAuth(`https://api.toleave.shop/test/getUserInfo/${userIdentifier}`)
+      .then(
+        async (
+          res: Response
+        ): Promise<{ success: boolean; data: UserData; message?: string }> => {
+          if (!res.ok) {
+            throw new Error(`서버 오류: ${res.status}`);
+          }
+          return res.json();
+        }
+      )
+      .then((data) => {
+        if (data.success) {
+          setUserData(data.data);
+        } else {
+          throw new Error(data.message || "유저 정보를 불러올 수 없습니다.");
+        }
+      })
+      .catch((error: unknown) => {
+        console.error("🚨 유저 정보 요청 실패:", error);
+        setError(
+          error instanceof Error ? error.message : "알 수 없는 오류 발생"
+        );
+      });
+  }, []);
+
+  return (
+    <div>
+      <h1>마이페이지</h1>
+      {error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : userData ? (
+        <div>
+          <p>
+            <strong>이메일:</strong> {userData.email}
+          </p>
+          <p>
+            <strong>이름:</strong> {userData.name}
+          </p>
+          <p>
+            <strong>역할:</strong> {userData.role}
+          </p>
+          <p>
+            <strong>약관 동의:</strong>{" "}
+            {userData.policyAgreed ? "동의함" : "동의 안함"}
+          </p>
+          <p>
+            <strong>유료 구독 상태:</strong>{" "}
+            {userData.subscribed ? "구독 중" : "미구독"}
+          </p>
+        </div>
+      ) : (
+        <p>로딩 중...</p>
+      )}
+    </div>
+  );
+};
+
+export default MyPage;
