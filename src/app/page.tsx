@@ -9,7 +9,7 @@ const Login = () => {
   }, []);
 
   const loginHandler = () => {
-    const authUrl = "https://toleave.shop/oauth2/authorization/naver";
+    const authUrl = "https://api.toleave.shop/oauth2/authorization/naver";
 
     console.log("🔵 [로그인 요청] OAuth 네이버 로그인 페이지로 이동합니다...");
     console.log("📌 이동할 URL:", authUrl);
