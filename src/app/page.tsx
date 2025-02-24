@@ -5,10 +5,16 @@ import { useEffect } from "react";
 const Login = () => {
   useEffect(() => {
     fetch("https://toleave.shop/", {
-      credentials: "include", // 쿠키 포함하여 요청
+      credentials: "include", // ✅ 쿠키 포함하여 요청
     })
       .then((response) => {
-        console.log("🟢 응답 헤더 전체:", [...response.headers.entries()]); // 전체 헤더 출력
+        console.log("🟢 응답 헤더 전체:", [...response.headers.entries()]); // ✅ 모든 헤더 출력
+        return response.text().then((text) => {
+          console.log("📌 응답 본문:", text); // ✅ 서버 응답 본문 출력 (디버깅용)
+          return response;
+        });
+      })
+      .then((response) => {
         const refreshToken = response.headers.get("Refresh-Token");
         const userIdentifier = response.headers.get("User-Identifier");
 
