@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React from 'react';
-import '../../styles/globals.css';
-import { Provider } from 'react-redux';
-import store from '../../store/store';
-import Header from '@/app/_component/Header';
+import React from "react";
+import "../../styles/globals.css";
+import { Provider } from "react-redux";
+import store from "../../store/store";
+import Header from "../app/_component/Header";
 
 export default function RootLayout({
   children,
