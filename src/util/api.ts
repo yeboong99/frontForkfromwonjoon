@@ -1,5 +1,6 @@
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   const refreshToken = localStorage.getItem("refreshToken");
+  const userIdentifier = localStorage.getItem("userIdentifier"); // 유저 식별자 추가
 
   // headers 타입을 명확하게 정의
   const headers: Record<string, string> = {
@@ -11,6 +12,10 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 
   if (refreshToken) {
     headers["Refresh-Token"] = refreshToken;
+  }
+
+  if (userIdentifier) {
+    headers["User-Identifier"] = userIdentifier; // 추가
   }
 
   const response = await fetch(url, {
