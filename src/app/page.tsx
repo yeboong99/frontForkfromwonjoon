@@ -43,7 +43,7 @@ const Login = () => {
 
   return (
     <button type="button" onClick={loginHandler}>
-      네이버로 시작하기
+      느리야도아조😢
     </button>
   );
 };
