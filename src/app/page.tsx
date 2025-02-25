@@ -32,19 +32,29 @@ const Login = () => {
       .catch((error) => console.error("🚨 로그인 후 요청 실패:", error));
   }, []);
 
-  const loginHandler = () => {
-    const authUrl = "https://api.toleave.shop/oauth2/authorization/kakao";
+  const loginHandler = (provider: string) => {
+    const authUrl = `https://api.toleave.shop/oauth2/authorization/${provider}`;
 
-    console.log("🔵 [로그인 요청] OAuth 네이버 로그인 페이지로 이동합니다...");
+    console.log(
+      `🔵 [로그인 요청] OAuth ${provider} 로그인 페이지로 이동합니다...`
+    );
     console.log("📌 이동할 URL:", authUrl);
 
     window.location.href = authUrl;
   };
 
   return (
-    <button type="button" onClick={loginHandler}>
-      느리야도아조😢
-    </button>
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <button type="button" onClick={() => loginHandler("naver")}>
+        네이버로 로그인하기
+      </button>
+      <button type="button" onClick={() => loginHandler("kakao")}>
+        카카오로 로그인하기
+      </button>
+      <button type="button" onClick={() => loginHandler("google")}>
+        구글로 로그인하기
+      </button>
+    </div>
   );
 };
 
