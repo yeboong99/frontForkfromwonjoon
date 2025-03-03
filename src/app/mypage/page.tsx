@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchWithAuth } from "../../util/api"; // tsconfig.json의 paths 설정 적용
+import { fetchWithAuth } from "../../util/api";
 
 interface UserData {
   email: string;
@@ -16,25 +16,13 @@ const MyPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const refreshToken = localStorage.getItem("refreshToken");
-    const userIdentifier = localStorage.getItem("userIdentifier"); // 유저 식별자 추가
-
-    if (!refreshToken || !userIdentifier) {
-      setError("로그인 정보가 없습니다. 다시 로그인해주세요.");
-      return;
-    }
-
-    fetchWithAuth(`https://api.toleave.shop/test/getUserInfo/${userIdentifier}`)
-      .then(
-        async (
-          res: Response
-        ): Promise<{ success: boolean; data: UserData; message?: string }> => {
-          if (!res.ok) {
-            throw new Error(`서버 오류: ${res.status}`);
-          }
-          return res.json();
+    fetchWithAuth("https://api.toleave.shop/test/getUserInfo")
+      .then(async (res: Response) => {
+        if (!res.ok) {
+          throw new Error(`서버 오류: ${res.status}`);
         }
-      )
+        return res.json();
+      })
       .then((data) => {
         if (data.success) {
           setUserData(data.data);

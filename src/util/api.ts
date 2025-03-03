@@ -1,28 +1,27 @@
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-  const refreshToken = localStorage.getItem("refreshToken");
-  const userIdentifier = localStorage.getItem("userIdentifier"); // 유저 식별자 추가
-
-  // headers 타입을 명확하게 정의
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(options.headers instanceof Headers
-      ? Object.fromEntries(options.headers.entries()) // Headers 객체 → 일반 객체 변환
-      : (options.headers as Record<string, string>) || {}),
-  };
-
-  if (refreshToken) {
-    headers["Refresh-Token"] = refreshToken;
-  }
-
-  if (userIdentifier) {
-    headers["User-Identifier"] = userIdentifier; // 추가
-  }
-
-  const response = await fetch(url, {
+  let response = await fetch(url, {
     ...options,
-    headers,
-    credentials: "include", // Access Token이 담긴 쿠키 포함
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
   });
+
+  // ✅ Access Token이 재발급되었을 경우 (205 상태 코드)
+  if (response.status === 205) {
+    console.log("🔄 Access Token이 갱신됨. 요청을 다시 시도합니다.");
+
+    // 갱신된 쿠키를 기반으로 재요청
+    response = await fetch(url, {
+      ...options,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+    });
+  }
 
   return response;
 };
