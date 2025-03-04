@@ -11,7 +11,9 @@ interface UserData {
 
 // ✅ Server Component 적용
 export default async function MyPage() {
-  const userIdentifier = cookies().get("User-Identifier")?.value;
+  // 🛠 `cookies()`를 호출하고 값을 가져옴 (올바른 비동기 처리)
+  const cookieStore = await cookies(); // ✅ `await` 사용
+  const userIdentifier = cookieStore.get("User-Identifier")?.value;
 
   if (!userIdentifier) {
     return (
