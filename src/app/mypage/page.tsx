@@ -16,8 +16,21 @@ const MyPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchWithAuth("https://api.toleave.shop/test/getUserInfo")
+    // localStorage에서 userIdentifier 가져오기
+    const userIdentifier = localStorage.getItem("userIdentifier");
+
+    if (!userIdentifier) {
+      setError("로그인 정보가 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
+    // GET 요청 URL 설정
+    const requestUrl = `https://api.toleave.shop/test/getUserInfo/${userIdentifier}`;
+    console.log("📌 요청 보낼 URL:", requestUrl); // 디버깅용
+
+    fetchWithAuth(requestUrl)
       .then(async (res: Response) => {
+        console.log("🟢 서버 응답 상태 코드:", res.status);
         if (!res.ok) {
           throw new Error(`서버 오류: ${res.status}`);
         }
@@ -30,7 +43,7 @@ const MyPage = () => {
           throw new Error(data.message || "유저 정보를 불러올 수 없습니다.");
         }
       })
-      .catch((error: unknown) => {
+      .catch((error) => {
         console.error("🚨 유저 정보 요청 실패:", error);
         setError(
           error instanceof Error ? error.message : "알 수 없는 오류 발생"
