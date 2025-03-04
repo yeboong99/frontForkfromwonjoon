@@ -27,7 +27,7 @@ export default async function MyPage() {
   }
 
   // ✅ 서버에서 직접 API 호출
-  const requestUrl = `https://api.toleave.shop/user/test/getUserInfo/${userIdentifier}`;
+  const requestUrl = `/user/test/getUserInfo/${userIdentifier}`;
   console.log("📌 요청 보낼 URL:", requestUrl);
 
   try {
