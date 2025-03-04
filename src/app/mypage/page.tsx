@@ -1,7 +1,8 @@
 "use client";
 
+import { GetServerSidePropsContext } from "next";
 import { useEffect, useState } from "react";
-import { fetchWithAuth, getCookie } from "../../util/api"; // getCookie 함수 추가
+import { fetchWithAuth } from "../../util/api";
 
 interface UserData {
   email: string;
@@ -11,19 +12,29 @@ interface UserData {
   subscribed: boolean;
 }
 
-const MyPage = () => {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  // 요청에서 쿠키를 가져오기
+  const userIdentifier = context.req.cookies["User-Identifier"];
+
+  if (!userIdentifier) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { userIdentifier },
+  };
+}
+
+const MyPage = ({ userIdentifier }: { userIdentifier: string }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // 쿠키에서 userIdentifier 가져오기
-    const userIdentifier = getCookie("User-Identifier");
-
-    if (!userIdentifier) {
-      setError("로그인 정보가 없습니다. 다시 로그인해주세요.");
-      return;
-    }
-
     // GET 요청 URL 설정
     const requestUrl = `https://api.toleave.shop/user/test/getUserInfo/${userIdentifier}`;
     console.log("📌 요청 보낼 URL:", requestUrl);
@@ -49,7 +60,7 @@ const MyPage = () => {
           error instanceof Error ? error.message : "알 수 없는 오류 발생"
         );
       });
-  }, []);
+  }, [userIdentifier]);
 
   return (
     <div>
