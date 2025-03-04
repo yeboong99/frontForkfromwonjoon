@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchWithAuth } from "../../util/api";
+import { fetchWithAuth, getCookie } from "../../util/api"; // getCookie 함수 추가
 
 interface UserData {
   email: string;
@@ -16,8 +16,8 @@ const MyPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // localStorage에서 userIdentifier 가져오기
-    const userIdentifier = localStorage.getItem("userIdentifier");
+    // 쿠키에서 userIdentifier 가져오기
+    const userIdentifier = getCookie("User-Identifier");
 
     if (!userIdentifier) {
       setError("로그인 정보가 없습니다. 다시 로그인해주세요.");
@@ -26,7 +26,7 @@ const MyPage = () => {
 
     // GET 요청 URL 설정
     const requestUrl = `https://api.toleave.shop/test/getUserInfo/${userIdentifier}`;
-    console.log("📌 요청 보낼 URL:", requestUrl); // 디버깅용
+    console.log("📌 요청 보낼 URL:", requestUrl);
 
     fetchWithAuth(requestUrl)
       .then(async (res: Response) => {
