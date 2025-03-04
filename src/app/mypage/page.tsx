@@ -25,7 +25,7 @@ const MyPage = () => {
     }
 
     // GET 요청 URL 설정
-    const requestUrl = `https://api.toleave.shop/test/getUserInfo/${userIdentifier}`;
+    const requestUrl = `https://api.toleave.shop/user/test/getUserInfo/${userIdentifier}`;
     console.log("📌 요청 보낼 URL:", requestUrl);
 
     fetchWithAuth(requestUrl)
