@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchWithAuth, getCookie } from "../../util/api";
+import { fetchWithAuth, getCookie } from "../../util/api"; // getCookie 함수 추가
 
 interface UserData {
   email: string;
@@ -14,18 +14,21 @@ interface UserData {
 const MyPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [userIdentifier, setUserIdentifier] = useState<string | null>(null);
 
   useEffect(() => {
-    // 쿠키에서 userIdentifier 가져오기
-    const userIdentifier = getCookie("User-Identifier");
+    // ✅ 쿠키에서 userIdentifier 가져오기
+    const identifier = getCookie("User-Identifier");
+    console.log("✅ 가져온 userIdentifier:", identifier);
 
-    if (!userIdentifier) {
+    if (!identifier) {
       setError("로그인 정보가 없습니다. 다시 로그인해주세요.");
       return;
     }
 
-    // ✅ API 요청
-    const requestUrl = `https://api.toleave.shop/user/test/getUserInfo/${userIdentifier}`;
+    setUserIdentifier(identifier); // 상태 업데이트
+
+    const requestUrl = `https://api.toleave.shop/user/test/getUserInfo/${identifier}`;
     console.log("📌 요청 보낼 URL:", requestUrl);
 
     fetchWithAuth(requestUrl)
